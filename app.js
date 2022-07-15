@@ -2,6 +2,7 @@
 
 /** Express app for jobly. */
 
+const widgets = require("./routes/widgets");
 const express = require("express");
 const cors = require("cors");
 
@@ -18,11 +19,11 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
-/* app.use("/auth", authRoutes);
+app.use("/widgets", widgets);
+/*
 app.use("/companies", companiesRoutes);
 app.use("/users", usersRoutes);
 app.use("/jobs", jobsRoutes); */
-
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
