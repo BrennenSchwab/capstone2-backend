@@ -3,6 +3,7 @@
 /** Express app for jobly. */
 
 const widgets = require("./routes/widgets");
+const notes = require("./routes/notes");
 const express = require("express");
 const cors = require("cors");
 
@@ -20,6 +21,7 @@ app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
 app.use("/widgets", widgets);
+app.use("/notes", notes);
 /*
 app.use("/companies", companiesRoutes);
 app.use("/users", usersRoutes);
