@@ -26,8 +26,8 @@ class User {
     const result = await db.query(
           `SELECT username,
                   password,
-                  firstName,
-                  lastName,
+                  first_name AS "firstName",
+                  last_name AS "lastName",
                   email
            FROM users
            WHERE username = $1`,
@@ -56,7 +56,7 @@ class User {
    **/
 
   static async register(
-      { username, password, firstName, lastName, email, isAdmin }) {
+      { username, password, firstName, lastName, email, imageUrl }) {
     const duplicateCheck = await db.query(
           `SELECT username
            FROM users
@@ -77,15 +77,16 @@ class User {
             first_name,
             last_name,
             email,
-            is_admin)
+            image_url)
            VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING username, firstName, lastName, email`,
+           RETURNING username, first_name AS "firstName", last_name AS "lastName", email, image_url`,
         [
           username,
           hashedPassword,
           firstName,
           lastName,
           email,
+          imageUrl
         ],
     );
 
@@ -94,28 +95,8 @@ class User {
     return user;
   }
 
-  /** Find all users.
-   *
-   * Returns [{ username, first_name, last_name, email, is_admin }, ...]
-   **/
-
-  static async findAll() {
-    const result = await db.query(
-          `SELECT username,
-                  firstName,
-                  lastName,
-                  email
-           FROM users
-           ORDER BY username`,
-    );
-
-    return result.rows;
-  }
 
   /** Given a username, return data about user.
-   *
-   * Returns { username, first_name, last_name, is_admin, jobs }
-   *   where jobs is { id, title, company_handle, company_name, state }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -123,9 +104,10 @@ class User {
   static async get(username) {
     const userRes = await db.query(
           `SELECT username,
-                  firstName,
-                  lastName,
-                  email
+                  first_name AS "firstName",
+                  last_name AS "lastName",
+                  email,
+                  image_url AS "imageUrl",
            FROM users
            WHERE username = $1`,
         [username],
@@ -149,8 +131,9 @@ class User {
     const { setCols, values } = sqlForPartialUpdate(
         data,
         {
-          firstName: "firstName",
-          lastName: "lastName",
+          firstName: "first_name",
+          lastName: "last_name",
+          imageUrl: "imageUrl",
         });
     const usernameVarIdx = "$" + (values.length + 1);
 
@@ -158,9 +141,10 @@ class User {
                       SET ${setCols} 
                       WHERE username = ${usernameVarIdx} 
                       RETURNING username,
-                                firstName,
-                                lastName,
-                                email`;
+                                first_name AS "firstName",
+                                last_name AS "lastName",
+                                email,
+                                image_url AS "imageUrl"`;
     const result = await db.query(querySql, [...values, username]);
     const user = result.rows[0];
 

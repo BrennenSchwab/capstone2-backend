@@ -9,6 +9,7 @@ const {
 } = require("../expressError");
 
 class Notes {
+
   static async create(data) {
     const { content } = data;
     const result = await db.query(
@@ -19,6 +20,25 @@ class Notes {
     );
     //verify
     const note = result.rows[0];
+    return note;
+  }
+
+  static async update(id, data) {
+    const { setCols, values } = sqlForPartialUpdate(
+        data,
+        {});
+    const idVarIdx = "$" + (values.length + 1);
+
+    const querySql = `UPDATE notes 
+                      SET ${setCols} 
+                      WHERE id = ${idVarIdx} 
+                      RETURNING id, 
+                                notesData`;
+    const result = await db.query(querySql, [...values, id]);
+    const note = result.rows[0];
+
+    if (!note) throw new NotFoundError(`No note: ${id}`);
+
     return note;
   }
 }
