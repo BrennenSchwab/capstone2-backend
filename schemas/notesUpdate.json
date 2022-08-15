@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://capstone-app.com/notesUpdate.schema.json",
+    "type": "object",
+    "properties": {
+      "notesData": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "notesData"
+    ]
+  }

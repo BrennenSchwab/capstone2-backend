@@ -1,7 +1,7 @@
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
-  "firstName" TEXT NOT NULL,
-  "lastName" TEXT NOT NULL,
+  "first_name" TEXT NOT NULL,
+  "last_name" TEXT NOT NULL,
   "email" TEXT NOT NULL
     CHECK (position('@' IN email) > 1),
   "password" TEXT NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "news" (
   "id" INT PRIMARY KEY,
-  "category" TEXT,
+  "news_category" TEXT,
   "handle" TEXT,
   "country" TEXT,
   "default" TEXT
@@ -19,29 +19,30 @@ CREATE TABLE "news" (
 CREATE TABLE "weather" (
   "id" INT PRIMARY KEY,
   "location" TEXT,
-  "user_id" INT,
   "weather_category" TEXT
 );
 
 CREATE TABLE "notes" (
   "id" INT PRIMARY KEY,
-  "user_id" INT,
-  "notesData" TEXT
+  "notes_data" TEXT
 );
 
-CREATE TABLE "widget" (
+CREATE TABLE "widgets" (
   "id" INT PRIMARY KEY,
   "user_id" INT,
-  "x_y_z" INT,
+  "x" INT,
+  "y" INT,
+  "width" INT,
+  "height" INT,
   "content_type" TEXT,
   "content_id" INT
 );
 
-ALTER TABLE "widget" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "widgets" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "news" ADD FOREIGN KEY ("id") REFERENCES "widget" ("content_id");
+ALTER TABLE "news" ADD FOREIGN KEY ("id") REFERENCES "widgets" ("content_id");
 
-ALTER TABLE "notes" ADD FOREIGN KEY ("id") REFERENCES "widget" ("content_id");
+ALTER TABLE "notes" ADD FOREIGN KEY ("id") REFERENCES "widgets" ("content_id");
 
-ALTER TABLE "weather" ADD FOREIGN KEY ("id") REFERENCES "widget" ("content_id");
+ALTER TABLE "weather" ADD FOREIGN KEY ("id") REFERENCES "widgets" ("content_id");
 
