@@ -5,7 +5,7 @@
   "properties": {
     "password": {
       "type": "string",
-      "minLength": 5,
+      "minLength": 6,
       "maxLength": 20
     },
     "firstName": {
